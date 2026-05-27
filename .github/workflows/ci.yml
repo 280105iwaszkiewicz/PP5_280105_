@@ -1,0 +1,30 @@
+name: CI Pipeline
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pytest pylint black
+
+    - name: Check code formatting with Black
+      run: black --check .
+
+    - name: Run static analysis with Pylint
+      run: pylint utils.py
+
+    - name: Run tests with Pytest
+      run: pytest test_utils.py
